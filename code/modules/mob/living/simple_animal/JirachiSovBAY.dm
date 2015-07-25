@@ -1457,8 +1457,8 @@
 
 /obj/item/device/jirachistone
 	name = "Shiny stone"
-	icon = 'icons/mob/jirachi.dmi'
 	desc = "You can see a strange white glowing inside it"
+	icon = 'icons/mob/jirachi.dmi'
 	icon_state = "stone"
 	item_state = "stone"
 	w_class = 2
