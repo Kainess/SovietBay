@@ -337,7 +337,7 @@
 	src << "\blue I put my hands on [Z] and let my energy flow through it's body."
 	if(istype(Z,/mob/living/simple_animal))
 		var/mob/living/simple_animal/I = Z
-		if(I.faction != "cult")
+		if(I.faction != "cult" && I.faction != "faithless")
 			I << "\blue <b>You feel immense energy course through you body!</b>"
 		else
 			I << "\red \bold That power makes you burn from inside! Aaarrgh!!!"
@@ -412,6 +412,7 @@
 							H.vessel.reagent_list = list()
 							H.vessel.add_reagent("blood",560)
 							if(H.shock_stage > 0 || H.traumatic_shock > 0)
+								H.analgesic = 10
 								H.shock_stage = 0
 								H.traumatic_shock = 0
 								H.next_pain_time = 0
@@ -438,6 +439,7 @@
 							H.vessel.reagent_list = list()
 							H.vessel.add_reagent("blood",560)
 							if(H.shock_stage > 0 || H.traumatic_shock > 0)
+								H.analgesic = 10
 								H.shock_stage = 0
 								H.traumatic_shock = 0
 								H.next_pain_time = 0
@@ -467,6 +469,7 @@
 							H.vessel.reagent_list = list()
 							H.vessel.add_reagent("blood",560)
 							if(H.shock_stage > 0 || H.traumatic_shock > 0)
+								H.analgesic = 10
 								H.shock_stage = 0
 								H.traumatic_shock = 0
 								H.next_pain_time = 0
@@ -481,6 +484,10 @@
 							if(HUSK in H.mutations)
 								H.mutations.Remove(HUSK)
 								H << "\blue As the power channels through your damaged skin, it starts to regenerate..."
+							var/datum/organ/external/head/h = H.organs_by_name["head"]
+							if(h.disfigured != 0)
+								h.disfigured = 0
+								H << "\blue Waves of energy goes through your disfigured face...it feels good"
 							for(var/datum/organ/external/O in H.organs)
 								O.rejuvenate()
 							for(var/datum/organ/internal/K in H.organs)
@@ -535,6 +542,7 @@
 							H.vessel.reagent_list = list()
 							H.vessel.add_reagent("blood",560)
 							if(H.shock_stage > 0 || H.traumatic_shock > 0)
+								H.analgesic = 10
 								H.shock_stage = 0
 								H.traumatic_shock = 0
 								H.next_pain_time = 0
@@ -561,6 +569,7 @@
 							H.vessel.reagent_list = list()
 							H.vessel.add_reagent("blood",560)
 							if(H.shock_stage > 0 || H.traumatic_shock > 0)
+								H.analgesic = 10
 								H.shock_stage = 0
 								H.traumatic_shock = 0
 								H.next_pain_time = 0
@@ -590,6 +599,7 @@
 							H.vessel.reagent_list = list()
 							H.vessel.add_reagent("blood",560)
 							if(H.shock_stage > 0 || H.traumatic_shock > 0)
+								H.analgesic = 10
 								H.shock_stage = 0
 								H.traumatic_shock = 0
 								H.next_pain_time = 0
@@ -604,6 +614,10 @@
 							if(HUSK in H.mutations)
 								H.mutations.Remove(HUSK)
 								H << "\blue As the power channels through your damaged skin, it starts to regenerate..."
+							var/datum/organ/external/head/h = H.organs_by_name["head"]
+							if(h.disfigured != 0)
+								h.disfigured = 0
+								H << "\blue Waves of energy goes through your disfigured face...it feels good"
 							for(var/datum/organ/external/O in H.organs)
 								O.rejuvenate()
 							for(var/datum/organ/internal/K in H.organs)
@@ -654,7 +668,7 @@
 
 		if(istype(Z, /mob/living/simple_animal))	//Constructs and faithlesses are dark creatures. What happens if we channel light energy through dark creature?
 			var/mob/living/simple_animal/S = Z
-			if(S.faction != "cult")
+			if(S.faction != "cult" && S.faction != "faithless")
 				if(star_form == 1)
 					S.health += 40
 				else
