@@ -11,6 +11,29 @@
 	var/const/duration = 13 //Directly relates to the 'weaken' duration. Lowered by armor (i.e. helmets)
 	var/isGlass = 1 //Whether the 'bottle' is made of glass or not so that milk cartons dont shatter when someone gets hit by it
 
+/obj/item/weapon/reagent_containers/food/drinks/bottle/verb/twist()
+	set src in view(1)
+	set name = "Twist bottle"
+	set category = "Object"
+
+	if(!istype(src.loc, /turf))
+		usr << "\red The bottle should be on the floor."
+	else
+		usr.visible_message("\blue [usr] twist the bottle.","\blue You twist the bottle.")
+		var/start_loc = src.loc
+		sleep(30)
+		var/list/P = list()
+		for(var/mob/living/carbon/human/H in orange(4,src))
+			P += H
+		if(istype(src.loc, /turf) && src.loc == start_loc)
+			if(prob(80))
+				var/mob/living/carbon/human/T = pick(P)
+				T.visible_message("\blue Bottle pointed at [T].","\red The bottle pointed at you.")
+			else
+				for(var/mob/M in viewers(src))
+					M << "\red Bottle pointed at... Nothing."
+
+
 /obj/item/weapon/reagent_containers/food/drinks/bottle/proc/smash(mob/living/target as mob, mob/living/user as mob)
 
 	//Creates a shattering noise and replaces the bottle with a broken_bottle
