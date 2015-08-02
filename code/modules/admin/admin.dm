@@ -753,6 +753,13 @@ var/global/floorIsLava = 0
 	message_admins("[key_name_admin(usr)] toggled OOC.", 1)
 	feedback_add_details("admin_verb","TOOC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
+/datum/admins/proc/toggleexplosions()
+	set category = "Server"
+	set desc="Toggles explosions"
+	set name="Toggle Explosions"
+	config.explosions_allowed = !(config.explosions_allowed)
+	log_admin("[key_name(usr)] toggled explosions to [config.explosions_allowed].")
+	message_admins("[key_name_admin(usr)] toggled explosions to [config.explosions_allowed].", 1)
 
 /datum/admins/proc/toggledsay()
 	set category = "Server"

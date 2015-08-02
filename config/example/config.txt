@@ -356,6 +356,9 @@ NINJAS_ALLOWED
 ## Uncomment to disable the OOC channel by default.
 #DISABLE_OOC
 
+## Uncomment to disable explosions by default.
+#DISABLE_EXPLOSIONS
+
 ## Uncomment to disable the dead OOC channel by default.
 #DISABLE_DEAD_OOC
 

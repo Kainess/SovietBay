@@ -182,6 +182,7 @@
 	var/ninjas_allowed = 0
 	var/abandon_allowed = 1
 	var/ooc_allowed = 1
+	var/explosions_allowed = 1
 	var/dooc_allowed = 1
 	var/dsay_allowed = 1
 
@@ -393,6 +394,9 @@
 
 				if ("disable_ooc")
 					config.ooc_allowed = 0
+
+				if ("disable_explosions")
+					config.explosions_allowed = 0
 
 				if ("disable_entry")
 					config.enter_allowed = 0
