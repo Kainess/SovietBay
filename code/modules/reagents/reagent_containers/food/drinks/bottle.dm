@@ -19,7 +19,7 @@
 	if(!istype(src.loc, /turf))
 		usr << "\red The bottle should be on the floor."
 	else
-		usr.visible_message("\blue [usr] twist the bottle.","\blue You twist the bottle.")
+		usr.visible_message("\blue [usr] twist the [src].","\blue You twist the [src].")
 		var/start_loc = src.loc
 		sleep(30)
 		var/list/P = list()
@@ -28,10 +28,10 @@
 		if(istype(src.loc, /turf) && src.loc == start_loc)
 			if(prob(80))
 				var/mob/living/carbon/human/T = pick(P)
-				T.visible_message("\blue Bottle pointed at [T].","\red The bottle pointed at you.")
+				T.visible_message("\blue [src] pointed at [T].","\red The [src] pointed at you.")
 			else
 				for(var/mob/M in viewers(src))
-					M << "\red Bottle pointed at... Nothing."
+					M << "\blue [src] pointed at... Nothing."
 
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/proc/smash(mob/living/target as mob, mob/living/user as mob)
