@@ -8,6 +8,12 @@
 
 ///// Z-Level Stuff
 proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, adminlog = 1, z_transfer = 1)
+	if(!config.explosions_allowed)
+		if(adminlog)
+			message_admins("Explosion was blocked in area [epicenter.loc.name] ([epicenter.x],[epicenter.y],[epicenter.z]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[epicenter.x];Y=[epicenter.y];Z=[epicenter.z]'>JMP</a>)")
+			log_game("Explosion was blocked in area [epicenter.loc.name] ")
+		return
+		
 ///// Z-Level Stuff
 	src = null	//so we don't abort once src is deleted
 	spawn(0)
@@ -22,13 +28,13 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 
 ///// Z-Level Stuff
 		if(z_transfer && (devastation_range > 0 || heavy_impact_range > 0))
-			//transfer the explosion in both directions
+		//transfer the explosion in both directions
 			explosion_z_transfer(epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range)
 ///// Z-Level Stuff
 
 		var/max_range = max(devastation_range, heavy_impact_range, light_impact_range, flash_range)
-		//playsound(epicenter, 'sound/effects/explosionfar.ogg', 100, 1, round(devastation_range*2,1) )
-		//playsound(epicenter, "explosion", 100, 1, round(devastation_range,1) )
+	//playsound(epicenter, 'sound/effects/explosionfar.ogg', 100, 1, round(devastation_range*2,1) )
+	//playsound(epicenter, "explosion", 100, 1, round(devastation_range,1) )
 
 // Play sounds; we want sounds to be different depending on distance so we will manually do it ourselves.
 
@@ -42,7 +48,7 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 		far_dist += devastation_range * 20
 		var/frequency = get_rand_frequency()
 		for(var/mob/M in player_list)
-			// Double check for client
+		// Double check for client
 			if(M && M.client)
 				var/turf/M_turf = get_turf(M)
 				if(M_turf && M_turf.z == epicenter.z)
@@ -51,7 +57,7 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 					if(dist <= round(max_range + world.view - 2, 1))
 						M.playsound_local(epicenter, get_sfx("explosion"), 100, 1, frequency, falloff = 5) // get_sfx() is so that everyone gets the same sound
 
-						//You hear a far explosion if you're outside the blast radius. Small bombs shouldn't be heard all over the station.
+					//You hear a far explosion if you're outside the blast radius. Small bombs shouldn't be heard all over the station.
 
 					else if(dist <= far_dist)
 						var/far_volume = Clamp(far_dist, 30, 50) // Volume is based on explosion size and dist
@@ -59,9 +65,9 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 						M.playsound_local(epicenter, 'sound/effects/explosionfar.ogg', far_volume, 1, frequency, falloff = 5)
 
 		var/close = range(world.view+round(devastation_range,1), epicenter)
-		// to all distanced mobs play a different sound
+	// to all distanced mobs play a different sound
 		for(var/mob/M in world) if(M.z == epicenter.z) if(!(M in close))
-			// check if the mob can hear
+		// check if the mob can hear
 			if(M.ear_deaf <= 0 || !M.ear_deaf) if(!istype(M.loc,/turf/space))
 				M << 'sound/effects/explosionfar.ogg'
 		if(adminlog)
@@ -102,10 +108,10 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 					if(AM)	AM.ex_act(dist)
 
 		var/took = (world.timeofday-start)/10
-		//You need to press the DebugGame verb to see these now....they were getting annoying and we've collected a fair bit of data. Just -test- changes  to explosion code using this please so we can compare
+	//You need to press the DebugGame verb to see these now....they were getting annoying and we've collected a fair bit of data. Just -test- changes  to explosion code using this please so we can compare
 		if(Debug2)	world.log << "## DEBUG: Explosion([x0],[y0],[z0])(d[devastation_range],h[heavy_impact_range],l[light_impact_range]): Took [took] seconds."
 
-		//Machines which report explosions.
+	//Machines which report explosions.
 		for(var/i,i<=doppler_arrays.len,i++)
 			var/obj/machinery/doppler_array/Array = doppler_arrays[i]
 			if(Array)
@@ -120,6 +126,8 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 
 	return 1
 
+
+		
 
 
 proc/secondaryexplosion(turf/epicenter, range)
