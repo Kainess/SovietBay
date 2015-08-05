@@ -590,7 +590,7 @@ turf/simulated/floor/proc/update_icon()
 
 /turf/simulated/floor/proc/floor_filling()
 
-	for(var/obj/item/I in range(0, src))
+	for(var/obj/item/I in src.contents)
 		if(src.objs_count <= 0)
 			continue
 		src.objs_count -= 1
