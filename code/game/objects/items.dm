@@ -63,6 +63,7 @@
 	var/list/sprite_sheets_obj = null
 
 /obj/item/New()
+	..()
 	if(src.underfloor)
 		src.invisibility = 101
 		src.anchored = 1
