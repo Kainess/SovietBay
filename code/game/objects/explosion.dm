@@ -8,13 +8,12 @@
 
 ///// Z-Level Stuff
 proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, adminlog = 1, z_transfer = 1)
-
 	if(!config.explosions_allowed)
 		if(adminlog)
 			message_admins("Explosion was blocked in area [epicenter.loc.name] ([epicenter.x],[epicenter.y],[epicenter.z]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[epicenter.x];Y=[epicenter.y];Z=[epicenter.z]'>JMP</a>)")
 			log_game("Explosion was blocked in area [epicenter.loc.name] ")
 		return
-
+		
 ///// Z-Level Stuff
 	src = null	//so we don't abort once src is deleted
 	spawn(0)
@@ -126,6 +125,9 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 			defer_powernet_rebuild = 0
 
 	return 1
+
+
+		
 
 
 proc/secondaryexplosion(turf/epicenter, range)
