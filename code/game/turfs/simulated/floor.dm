@@ -589,9 +589,18 @@ turf/simulated/floor/proc/update_icon()
 //Placing items under floor
 
 /turf/simulated/floor/proc/floor_filling()
+	for(var/obj/TB in src.contents)
+		if(istype(TB, /obj/structure/table))
+			return
+		if(istype(TB, /obj/structure/closet))
+			return
+		if(istype(TB, /obj/structure/closet/crate))
+			return
 
 	for(var/obj/item/I in src.contents)
 		if(src.objs_count <= 0)
+			continue
+		if(I.anchored)
 			continue
 		src.objs_count -= 1
 		I.underfloor = 1

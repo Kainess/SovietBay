@@ -9,14 +9,14 @@
  * Banana Peals
  */
 /obj/item/weapon/bananapeel/Crossed(AM as mob|obj)
-	if (istype(AM, /mob/living))
+	if (istype(AM, /mob/living) && !src.underfloor)
 		var/mob/living/M = AM
 		M.slip("the [src.name]",4)
 /*
  * Soap
  */
 /obj/item/weapon/soap/Crossed(AM as mob|obj) //EXACTLY the same as bananapeel for now, so it makes sense to put it in the same dm -- Urist
-	if (istype(AM, /mob/living))
+	if (istype(AM, /mob/living) && !src.underfloor)
 		var/mob/living/M =	AM
 		M.slip("the [src.name]",3)
 
