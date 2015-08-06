@@ -45,6 +45,9 @@ var/list/wood_icons = list("wood","wood-broken")
 	var/floor_type = /obj/item/stack/tile/plasteel
 	var/lightfloor_state // for light floors, this is the state of the tile. 0-7, 0x4 is on-bit - use the helper procs below
 
+	var/const/objs_max_count = 30				//Floor max capacity
+	var/objs_count = objs_max_count		//Free space remaining
+
 	proc/get_lightfloor_state()
 		return lightfloor_state & LIGHTFLOOR_STATE_BITS
 
@@ -345,6 +348,7 @@ turf/simulated/floor/proc/update_icon()
 	broken = 0
 	burnt = 0
 
+	floor_devastation()
 	update_icon()
 	levelupdate()
 
@@ -372,6 +376,7 @@ turf/simulated/floor/proc/update_icon()
 	icon_state = "floor"
 	icon_regular_floor = icon_state
 
+
 	update_icon()
 	levelupdate()
 
@@ -391,6 +396,7 @@ turf/simulated/floor/proc/update_icon()
 	//if you gave a valid parameter, it won't get thisf ar.
 	floor_type = /obj/item/stack/tile/light
 
+
 	update_icon()
 	levelupdate()
 
@@ -408,6 +414,7 @@ turf/simulated/floor/proc/update_icon()
 			return
 	//if you gave a valid parameter, it won't get thisf ar.
 	floor_type = /obj/item/stack/tile/grass
+
 
 	update_icon()
 	levelupdate()
@@ -427,6 +434,7 @@ turf/simulated/floor/proc/update_icon()
 	//if you gave a valid parameter, it won't get thisf ar.
 	floor_type = /obj/item/stack/tile/wood
 
+
 	update_icon()
 	levelupdate()
 
@@ -444,6 +452,7 @@ turf/simulated/floor/proc/update_icon()
 			return
 	//if you gave a valid parameter, it won't get thisf ar.
 	floor_type = /obj/item/stack/tile/carpet
+
 
 	update_icon()
 	levelupdate()
@@ -539,6 +548,7 @@ turf/simulated/floor/proc/update_icon()
 							var/turf/simulated/floor/FF = get_step(src,direction)
 							FF.update_icon() //so siding gets updated properly
 				T.use(1)
+				floor_filling()
 				update_icon()
 				levelupdate()
 				playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
@@ -574,6 +584,31 @@ turf/simulated/floor/proc/update_icon()
 					broken = 0
 				else
 					user << "\blue You need more welding fuel to complete this task."
+
+
+//Placing items under floor
+
+/turf/simulated/floor/proc/floor_filling()
+
+	for(var/obj/item/I in src.contents)
+		if(src.objs_count <= 0)
+			continue
+		src.objs_count -= 1
+		I.underfloor = 1
+		I.invisibility = 101
+		I.anchored = 1
+		I.level = 1
+
+
+/turf/simulated/floor/proc/floor_devastation()
+	for(var/obj/item/I in src.contents)
+		if(!I.underfloor)
+			continue
+		I.underfloor = 0
+		I.invisibility = 0
+		I.anchored = 0
+		I.level = 2
+		src.objs_count = objs_max_count
 
 #undef LIGHTFLOOR_ON_BIT
 

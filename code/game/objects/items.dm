@@ -40,6 +40,7 @@
 	var/obj/item/device/uplink/hidden/hidden_uplink = null // All items can have an uplink hidden inside, just remember to add the triggers.
 	var/zoomdevicename = null //name used for message when binoculars/scope is used
 	var/zoom = 0 //1 if item is actively being used to zoom. For scoped guns and binoculars.
+	var/underfloor = 0 //Places item to underfloor
 
 	// Used to specify the icon file to be used when the item is worn. If not set the default icon for that slot will be used.
 	// If icon_override or sprite_sheets are set they will take precendence over this, assuming they apply to the slot in question.
@@ -60,6 +61,13 @@
 	Works similarly to worn sprite_sheets, except the alternate sprites are used when the clothing/refit_for_species() proc is called.
 	*/
 	var/list/sprite_sheets_obj = null
+
+/obj/item/New()
+	..()
+	if(src.underfloor)
+		src.invisibility = 101
+		src.anchored = 1
+		src.level = 1
 
 /obj/item/device
 	icon = 'icons/obj/device.dmi'
