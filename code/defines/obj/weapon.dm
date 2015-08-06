@@ -195,7 +195,7 @@
 		user << "<span class='notice'>[src] is now [armed ? "armed" : "disarmed"]</span>"
 
 /obj/item/weapon/legcuffs/beartrap/Crossed(AM as mob|obj)
-	if(armed)
+	if(armed && !src.underfloor)
 		if(ishuman(AM))
 			if(isturf(src.loc))
 				var/mob/living/carbon/H = AM

@@ -1368,7 +1368,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 	..()
 
 /obj/item/device/pda/clown/Crossed(AM as mob|obj) //Clown PDA is slippery.
-	if (istype(AM, /mob/living))
+	if (istype(AM, /mob/living) && !src.underfloor)
 		var/mob/living/M = AM
 
 		if(M.slip("the PDA",8) && M.real_name != src.owner && istype(src.cartridge, /obj/item/weapon/cartridge/clown))

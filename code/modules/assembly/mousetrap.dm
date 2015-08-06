@@ -21,7 +21,7 @@
 			holder.update_icon()
 
 	proc/triggered(mob/target as mob, var/type = "feet")
-		if(!armed)
+		if(!armed || src.underfloor)
 			return
 		var/datum/organ/external/affecting = null
 		if(ishuman(target))

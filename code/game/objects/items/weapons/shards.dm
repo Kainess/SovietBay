@@ -69,7 +69,7 @@
 	return ..()
 
 /obj/item/weapon/shard/Crossed(AM as mob|obj)
-	if(ismob(AM))
+	if(ismob(AM) && !src.underfloor)
 		var/mob/M = AM
 		M << "\red <B>You step on \the [src]!</B>"
 		playsound(src.loc, 'sound/effects/glass_step.ogg', 50, 1) // not sure how to handle metal shards with sounds
