@@ -888,6 +888,14 @@ note dizziness decrements automatically in the mob's Life() proc.
 		lying = 0
 		canmove = 1
 
+		if(iscarbon(src))
+			if(src:underfloor)
+				if(istype(src.loc, /turf/simulated/floor))
+					var/turf/simulated/floor/LT = src.loc
+					src << "\blue You forced floor tile above you."
+					new LT.floor_type(LT)
+					LT.make_plating()
+
 	if(lying)
 		density = 0
 		drop_l_hand()
