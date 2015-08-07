@@ -46,7 +46,8 @@ var/list/wood_icons = list("wood","wood-broken")
 	var/lightfloor_state // for light floors, this is the state of the tile. 0-7, 0x4 is on-bit - use the helper procs below
 
 	var/const/objs_max_count = 30				//Floor max capacity
-	var/objs_count = objs_max_count		//Free space remaining
+	var/objs_count = objs_max_count			//Free space remaining
+	var/has_mob = 0							//Only one mob can lying underfloor
 
 	proc/get_lightfloor_state()
 		return lightfloor_state & LIGHTFLOOR_STATE_BITS
@@ -325,6 +326,15 @@ turf/simulated/floor/proc/update_icon()
 //This proc will set floor_type to null and the update_icon() proc will then change the icon_state of the turf
 //This proc auto corrects the grass tiles' siding.
 /turf/simulated/floor/proc/make_plating()
+
+	for(var/mob/living/carbon/M in range(0,src))
+		if(!M.underfloor)
+			if(prob(80))
+				M.Weaken(2)
+				M.visible_message("\red Floor tile below you suddenly moves.","\blue Floor tile below [M] suddenly moves.")
+			else
+				M.visible_message("\red Floor tile below you suddenly moves, but you stood.","\blue Floor tile below [M] suddenly moves, but [M] stood.")
+
 	if(istype(src,/turf/simulated/floor/engine)) return
 
 	if(is_grass_floor())
@@ -585,6 +595,38 @@ turf/simulated/floor/proc/update_icon()
 				else
 					user << "\blue You need more welding fuel to complete this task."
 
+/turf/simulated/floor/MouseDrop_T(obj/item/stack/tile/T as obj, mob/user as mob)
+	if(is_plating())
+		if(!broken && !burnt)
+			if (T.get_amount() < 1)
+				return
+			if(!T.build_type)
+				floor_type = T.type
+			else
+				floor_type = T.build_type
+			intact = 1
+			if(istype(T,/obj/item/stack/tile/light))
+				var/obj/item/stack/tile/light/L = T
+				set_lightfloor_state(L.state)
+				set_lightfloor_on(L.on)
+			if(istype(T,/obj/item/stack/tile/grass))
+				for(var/direction in cardinal)
+					if(istype(get_step(src,direction),/turf/simulated/floor))
+						var/turf/simulated/floor/FF = get_step(src,direction)
+						FF.update_icon() //so siding gets updated properly
+			else if(istype(T,/obj/item/stack/tile/carpet))
+				for(var/direction in list(1,2,4,8,5,6,9,10))
+					if(istype(get_step(src,direction),/turf/simulated/floor))
+						var/turf/simulated/floor/FF = get_step(src,direction)
+						FF.update_icon() //so siding gets updated properly
+			T.use(1)
+			floor_filling()
+			update_icon()
+			levelupdate()
+			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
+		else
+			user << "\blue This section is too damaged to support a tile. Use a welder to fix the damage."
+
 
 //Placing items under floor
 
@@ -597,27 +639,56 @@ turf/simulated/floor/proc/update_icon()
 		if(istype(TB, /obj/structure/closet/crate))
 			return
 
-	for(var/obj/item/I in src.contents)
-		if(src.objs_count <= 0)
-			continue
-		if(I.anchored)
-			continue
-		src.objs_count -= 1
-		I.underfloor = 1
-		I.invisibility = 101
-		I.anchored = 1
-		I.level = 1
-
+	for(var/O in src.contents)
+		if(istype(O, /obj/item))
+			var/obj/item/I = O
+			if(src.objs_count <= 0)
+				continue
+			if(I.anchored)
+				continue
+			src.objs_count -= 1
+			I.underfloor = 1
+			I.invisibility = 101
+			I.anchored = 1
+			I.level = 1
+		if(istype(O, /mob/living/carbon))
+			var/mob/living/carbon/M = O
+			if(M.restrained())
+				continue
+			if(M.anchored)
+				continue
+			if(!M.lying)
+				continue
+			if(src.has_mob)
+				continue
+			src.has_mob = 1
+			M.underfloor = 1
+			M.invisibility = 101
+			M.handcuffed = 1
+			M.anchored = 1
+			M.alpha = 128
 
 /turf/simulated/floor/proc/floor_devastation()
-	for(var/obj/item/I in src.contents)
-		if(!I.underfloor)
-			continue
-		I.underfloor = 0
-		I.invisibility = 0
-		I.anchored = 0
-		I.level = 2
-		src.objs_count = objs_max_count
+	for(var/O in src.contents)
+		if(istype(O, /obj/item))
+			var/obj/item/I = O
+			if(!I.underfloor)
+				continue
+			I.underfloor = 0
+			I.invisibility = 0
+			I.level = 2
+			I.anchored = 0
+			src.objs_count = objs_max_count
+		if(istype(O, /mob/living/carbon))
+			var/mob/living/carbon/M = O
+			if(!M.underfloor)
+				continue
+			M.underfloor = 0
+			M.invisibility = 0
+			M.handcuffed = 0
+			M.anchored = 0
+			M.alpha = 255
+			src.has_mob = 0
 
 #undef LIGHTFLOOR_ON_BIT
 
