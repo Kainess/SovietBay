@@ -651,7 +651,7 @@ turf/simulated/floor/proc/update_icon()
 			I.invisibility = 101
 			I.anchored = 1
 			I.level = 1
-		if(istype(O, /mob/living/carbon))
+		if(iscarbon(O))
 			var/mob/living/carbon/M = O
 			if(M.restrained())
 				continue
@@ -679,7 +679,7 @@ turf/simulated/floor/proc/update_icon()
 			I.level = 2
 			I.anchored = 0
 			src.objs_count = objs_max_count
-		if(istype(O, /mob/living/carbon))
+		if(iscarbon(O))
 			var/mob/living/carbon/M = O
 			if(!M.underfloor)
 				continue
