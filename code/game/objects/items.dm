@@ -151,7 +151,11 @@
 
 	if (istype(src.loc, /obj/item/weapon/storage))
 		var/obj/item/weapon/storage/S = src.loc
-		S.remove_from_storage(src)
+		if(!S.underfloor)
+			S.remove_from_storage(src)
+		else
+			user << "\red You must remove the plating first."
+			return
 
 	src.throwing = 0
 	if (src.loc == user)
@@ -164,9 +168,12 @@
 		if(isliving(src.loc))
 			return
 		user.next_move = max(user.next_move+2,world.time + 2)
-	user.put_in_active_hand(src)
-	if(src.loc == user)
-		src.pickup(user)
+	if(!src.underfloor)
+		user.put_in_active_hand(src)
+		if(src.loc == user)
+			src.pickup(user)
+	else
+		user << "\red You must remove the plating first."
 	return
 
 
