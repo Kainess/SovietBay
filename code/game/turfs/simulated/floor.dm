@@ -331,9 +331,9 @@ turf/simulated/floor/proc/update_icon()
 		if(!M.underfloor)
 			if(prob(80))
 				M.Weaken(2)
-				M.visible_message("\red Floor tile below you suddenly moves.","\blue Floor tile below [M] suddenly moves.")
+				M.visible_message("\blue Floor tile below [M] suddenly moves.","\red Floor tile below you suddenly moves.")
 			else
-				M.visible_message("\red Floor tile below you suddenly moves, but you stood.","\blue Floor tile below [M] suddenly moves, but [M] stood.")
+				M.visible_message("\blue Floor tile below [M] suddenly moves, but [M] stood.","\red Floor tile below you suddenly moves, but you stood.")
 
 	if(istype(src,/turf/simulated/floor/engine)) return
 
