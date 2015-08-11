@@ -9,6 +9,7 @@
 	throwforce = 10.0
 	throw_speed = 1
 	throw_range = 7
+	prob(10)	var/stunforce = 10
 	w_class = 4.0
 	origin_tech = "combat=1"
 	attack_verb = list("robusted")
