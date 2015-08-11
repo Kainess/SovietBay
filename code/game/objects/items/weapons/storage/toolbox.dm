@@ -12,6 +12,8 @@
 	w_class = 4.0
 	origin_tech = "combat=1"
 	attack_verb = list("robusted")
+	var/stunforce = 10
+	var/agonyforce = 10
 
 	New()
 		..()
